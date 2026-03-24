@@ -1,5 +1,6 @@
 import * as React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import AddToCalendar from "../AddToCalendar";
 
@@ -21,7 +22,8 @@ test("allows initial open to be set", () => {
   expect(getDropped(container)).toBeTruthy();
 });
 
-test("allows clicking outside to close", () => {
+test("allows clicking outside to close", async () => {
+  const user = userEvent.setup();
   const { container, getByText } = render(
     <div>
       <AddToCalendar event={mockEvent} open />
@@ -29,17 +31,18 @@ test("allows clicking outside to close", () => {
     </div>
   );
 
-  fireEvent.click(getByText("Click Me"));
+  await user.click(getByText("Click Me"));
   expect(getDropped(container)).toBeFalsy();
 });
 
-test("allows clicking the button to toggle", () => {
+test("allows clicking the button to toggle", async () => {
+  const user = userEvent.setup();
   const { container, getByText } = render(<AddToCalendar event={mockEvent} />);
 
-  fireEvent.click(getByText("Add to My Calendar"));
+  await user.click(getByText("Add to My Calendar"));
   expect(getDropped(container)).toBeTruthy();
 
-  fireEvent.click(getByText("Add to My Calendar"));
+  await user.click(getByText("Add to My Calendar"));
   expect(getDropped(container)).toBeFalsy();
 });
 

@@ -1,7 +1,5 @@
 /.*
 /coverage
-/webpack*
 /docs/
-/setupTests.js
 /src/
 /yarn*
