@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createPortal } from "react-dom";
+import ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 
 import AddToCalendar from "../src/AddToCalendar";
@@ -53,7 +53,7 @@ const App = () => {
           <AddToCalendar event={{ name, details, location, startsAt, endsAt }} />
         </div>
       </main>
-      {createPortal(
+      {ReactDOM.createPortal(
         <footer>
           <p>
             Copyright (c) 2018-present CultureHQ

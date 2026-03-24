@@ -46,12 +46,14 @@ test("allows clicking the button to toggle", async () => {
   expect(getDropped(container)).toBeFalsy();
 });
 
-test("ignores other updates when establishing listener", () => {
+test("responds to open prop changes", () => {
   const { container, rerender } = render(<AddToCalendar event={mockEvent} />);
+
+  expect(getDropped(container)).toBeFalsy();
 
   rerender(<AddToCalendar event={mockEvent} open />);
 
-  expect(getDropped(container)).toBeFalsy();
+  expect(getDropped(container)).toBeTruthy();
 });
 
 test("makes expected links", () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import makeUrls, { CalendarEvent } from "./makeUrls";
 
@@ -7,46 +7,53 @@ type CalendarURLs = ReturnType<typeof makeUrls>;
 const useAutoFocus = () => {
   const elementRef = useRef<HTMLElement>(null);
 
-  useEffect(
-    () => {
-      const previous = document.activeElement;
-      const element = elementRef.current;
+  useEffect(() => {
+    const previous = document.activeElement;
+    const element = elementRef.current;
 
-      if (element) {
-        element.focus();
-      }
+    if (element) {
+      element.focus();
+    }
 
-      if (previous instanceof HTMLElement) {
-        return () => previous.focus();
-      }
+    if (previous instanceof HTMLElement) {
+      return () => previous.focus();
+    }
 
-      return undefined;
-    },
-    []
-  );
+    return undefined;
+  }, []);
 
   return elementRef;
 };
 
-type OpenStateToggle = (event?: React.MouseEvent) => void;
+type OpenStateToggle = () => void;
 
-const useOpenState = (initialOpen: boolean): [boolean, OpenStateToggle] => {
-  const [open, setOpen] = useState<boolean>(initialOpen);
-  const onToggle = () => setOpen(current => !current);
+const useOpenState = (controlledOpen: boolean): [boolean, OpenStateToggle] => {
+  const [open, setOpen] = useState(controlledOpen);
 
-  useEffect(
-    () => {
-      if (open) {
-        const onClose = () => setOpen(false);
+  useEffect(() => {
+    setOpen(controlledOpen);
+  }, [controlledOpen]);
+
+  const onToggle = useCallback(() => setOpen(current => !current), []);
+
+  useEffect(() => {
+    if (open) {
+      const onClose = () => setOpen(false);
+
+      // Defer adding the listener so the current click event doesn't
+      // immediately trigger it.
+      const frame = requestAnimationFrame(() => {
         document.addEventListener("click", onClose);
+      });
 
-        return () => document.removeEventListener("click", onClose);
-      }
+      return () => {
+        cancelAnimationFrame(frame);
+        document.removeEventListener("click", onClose);
+      };
+    }
 
-      return undefined;
-    },
-    [open, setOpen]
-  );
+    return undefined;
+  }, [open]);
 
   return [open, onToggle];
 };
@@ -59,7 +66,7 @@ type CalendarProps = {
 };
 
 const Calendar = React.forwardRef<CalendarRef, CalendarProps>(
-  ({ children, filename = false, href }, ref) => (
+  ({ children, filename, href }, ref) => (
     <a ref={ref} download={filename} href={href} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
