@@ -108,7 +108,7 @@ type AddToCalendarProps = {
   filename?: string;
 };
 
-const AddToCalendar: React.FC<AddToCalendarProps> = ({
+const AddToCalendar: React.FC<React.PropsWithChildren<AddToCalendarProps>> = ({
   children = "Add to My Calendar",
   event,
   filename = "download",
