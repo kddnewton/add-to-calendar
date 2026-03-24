@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "jsx": "react",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "dist",
     "sourceMap": false,
     "strict": true,
-    "target": "es5"
+    "target": "es6"
   },
   "include": ["src"],
   "exclude": ["**/__tests__/*"]

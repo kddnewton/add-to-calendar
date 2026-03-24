@@ -102,6 +102,7 @@ const Dropdown: React.FC<DropdownProps> = ({ filename, onToggle, urls }) => {
 };
 
 type AddToCalendarProps = {
+  children?: React.ReactNode;
   event: CalendarEvent;
   open?: boolean;
   filename?: string;
